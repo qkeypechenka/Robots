@@ -1,2 +1,13 @@
 /bin/
-/.settings/
+
+#Eclipse
+
+.classpath
+.project
+.settings/
+
+# IDEA
+
+/.idea/
+*.iml
+*.iws
