@@ -4,12 +4,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.Optional;
 
 public class MenuBarFactory {
 
-    private ActionListener listener;
+    private Optional<ActionListener> listener;
 
-    public MenuBarFactory(ActionListener listener) {
+    public MenuBarFactory(Optional<ActionListener> listener) {
         this.listener = listener;
     }
 
@@ -43,7 +44,7 @@ public class MenuBarFactory {
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
                 keyEvent, ActionEvent.ALT_MASK));
         menuItem.setActionCommand(text.toLowerCase());
-        menuItem.addActionListener(listener);
+        listener.ifPresent(menuItem::addActionListener);
         return menuItem;
     }
 }

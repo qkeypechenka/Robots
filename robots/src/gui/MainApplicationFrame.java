@@ -68,7 +68,8 @@ public class MainApplicationFrame extends JFrame
     }
     
     protected JMenuBar createMenuBar() {
-        var menuBarFactory = new MenuBarFactory(new ActionListener()); //TODO: it is abstract yet,
+        var menuBarFactory = new MenuBarFactory(null);
+        //TODO: it is abstract yet, add models for menu items
         var menuBar = menuBarFactory.createMenuBar();
         return menuBar;
     }
