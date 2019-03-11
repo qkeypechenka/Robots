@@ -2,8 +2,12 @@ package main.java.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -15,14 +19,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import main.java.gui.MenuBar.*;
 import main.java.log.Logger;
 
-/**
- * Что требуется сделать:
- * 1. Метод создания меню перегружен функционалом и трудно читается. 
- * Следует разделить его на серию более простых методов (или вообще выделить отдельный класс).
- *
- */
 public class MainApplicationFrame extends JFrame
 {
     private final JDesktopPane desktopPane = new JDesktopPane();
@@ -68,55 +67,45 @@ public class MainApplicationFrame extends JFrame
     }
     
     protected JMenuBar createMenuBar() {
-        var menuBarFactory = new MenuBarFactory(null);
-        //TODO: it is abstract yet, add models for menu items
+        var itemModels = new ArrayList<IMenuItemModel>();
+        itemModels.add(new MenuItemModel("New", KeyEvent.VK_N,
+                                    e -> Logger.debug("Pressed new")));
+        itemModels.add(new MenuItemModel("Quit", KeyEvent.VK_Q,
+                                    e -> Logger.debug("Pressed quit")));
+
+        var menuModel = new MenuModel("Document", null, KeyEvent.VK_D, itemModels);
+        var models = new ArrayList<IMenu>(Collections.singletonList(menuModel));
+
+        var menuBarFactory = new MenuBarFactory(models);
         var menuBar = menuBarFactory.createMenuBar();
         return menuBar;
     }
     
     private JMenuBar generateMenuBar()
     {
-        JMenuBar menuBar = new JMenuBar();
-        
-        JMenu lookAndFeelMenu = new JMenu("Режим отображения");
-        lookAndFeelMenu.setMnemonic(KeyEvent.VK_V);
-        lookAndFeelMenu.getAccessibleContext().setAccessibleDescription(
-                "Управление режимом отображения приложения");
-        
-        {
-            JMenuItem systemLookAndFeel = new JMenuItem("Системная схема", KeyEvent.VK_S);
-            systemLookAndFeel.addActionListener((event) -> {
-                setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                this.invalidate();
-            });
-            lookAndFeelMenu.add(systemLookAndFeel);
-        }
 
-        {
-            JMenuItem crossplatformLookAndFeel = new JMenuItem("Универсальная схема", KeyEvent.VK_S);
-            crossplatformLookAndFeel.addActionListener((event) -> {
-                setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-                this.invalidate();
-            });
-            lookAndFeelMenu.add(crossplatformLookAndFeel);
-        }
+        var firstMenuModels = new ArrayList<IMenuItemModel>();
+        firstMenuModels.add(new MenuItemModel("Системная схема", KeyEvent.VK_S, e -> {
+            setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            this.invalidate();
+        }));
+        firstMenuModels.add(new MenuItemModel("Универсальная схема", KeyEvent.VK_S, e -> {
+            setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            this.invalidate();
+        }));
+        var lookAndFeelMenuModel = new MenuModel("Режим отображения",
+                "Управление режимом отображения приложения",
+                KeyEvent.VK_V, firstMenuModels);
 
-        JMenu testMenu = new JMenu("Тесты");
-        testMenu.setMnemonic(KeyEvent.VK_T);
-        testMenu.getAccessibleContext().setAccessibleDescription(
-                "Тестовые команды");
-        
-        {
-            JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
-            addLogMessageItem.addActionListener((event) -> {
-                Logger.debug("Новая строка");
-            });
-            testMenu.add(addLogMessageItem);
-        }
 
-        menuBar.add(lookAndFeelMenu);
-        menuBar.add(testMenu);
-        return menuBar;
+        var secondMenuModels = new ArrayList<IMenuItemModel>();
+        secondMenuModels.add(new MenuItemModel("Сообщение в лог", KeyEvent.VK_S,
+                e -> Logger.debug("Новая строка")));
+
+        var testMenuModel = new MenuModel("Тесты", "Тестовые команды", KeyEvent.VK_T, secondMenuModels);
+
+        var factory = new MenuBarFactory(new ArrayList<>(Arrays.asList(lookAndFeelMenuModel, testMenuModel)));
+        return factory.createMenuBar();
     }
     
     private void setLookAndFeel(String className)
