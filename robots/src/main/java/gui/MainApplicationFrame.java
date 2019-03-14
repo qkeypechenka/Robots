@@ -2,22 +2,12 @@ package main.java.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 
 import main.java.gui.MenuBar.*;
 import main.java.log.Logger;
@@ -46,9 +36,16 @@ public class MainApplicationFrame extends JFrame
         addWindow(gameWindow);
 
         setJMenuBar(generateMenuBar());
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                onClose();
+            }
+        });
     }
-    
+
     protected LogWindow createLogWindow()
     {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
@@ -77,8 +74,7 @@ public class MainApplicationFrame extends JFrame
         var models = new ArrayList<IMenu>(Collections.singletonList(menuModel));
 
         var menuBarFactory = new MenuBarFactory(models);
-        var menuBar = menuBarFactory.createMenuBar();
-        return menuBar;
+        return menuBarFactory.createMenuBar();
     }
     
     private JMenuBar generateMenuBar()
@@ -119,6 +115,18 @@ public class MainApplicationFrame extends JFrame
             | IllegalAccessException | UnsupportedLookAndFeelException e)
         {
             // just ignore
+        }
+    }
+
+    private void onClose() {
+
+        var n = JOptionPane.showOptionDialog(new JFrame(), "Are you sure?", "Do you want close program?",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Yes", "No"},
+                JOptionPane.YES_OPTION);
+
+        if (n == JOptionPane.YES_OPTION) {
+            this.dispose();
+            System.exit(0);
         }
     }
 }
