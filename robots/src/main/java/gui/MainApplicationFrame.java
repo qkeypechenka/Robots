@@ -46,7 +46,7 @@ public class MainApplicationFrame extends JFrame
         });
     }
 
-    protected LogWindow createLogWindow()
+    private LogWindow createLogWindow()
     {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
         logWindow.setLocation(10,10);
@@ -57,7 +57,7 @@ public class MainApplicationFrame extends JFrame
         return logWindow;
     }
     
-    protected void addWindow(JInternalFrame frame)
+    private void addWindow(JInternalFrame frame)
     {
         desktopPane.add(frame);
         frame.setVisible(true);
