@@ -37,7 +37,7 @@ public class MainApplicationFrame extends JFrame
 
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -64,43 +64,42 @@ public class MainApplicationFrame extends JFrame
     }
     
     protected JMenuBar createMenuBar() {
-        var itemModels = new ArrayList<IMenuItemModel>();
-        itemModels.add(new MenuItemModel("New", KeyEvent.VK_N,
-                                    e -> Logger.debug("Pressed new")));
-        itemModels.add(new MenuItemModel("Quit", KeyEvent.VK_Q,
-                                    e -> Logger.debug("Pressed quit")));
+        var menuBarFactory = new MenuBarFactory();
 
-        var menuModel = new MenuModel("Document", null, KeyEvent.VK_D, itemModels);
-        var models = new ArrayList<IMenu>(Collections.singletonList(menuModel));
+        var menuModel = new MenuModel("Document", null, KeyEvent.VK_D);
+        menuModel.addMenuItemModel(new MenuItemModel("New", KeyEvent.VK_N,
+                e -> Logger.debug("Pressed new")));
+        menuModel.addMenuItemModel(new MenuItemModel("Quit", KeyEvent.VK_Q,
+                e -> onClose()));
 
-        var menuBarFactory = new MenuBarFactory(models);
+        menuBarFactory.addMenu(menuModel);
+
         return menuBarFactory.createMenuBar();
     }
     
     private JMenuBar generateMenuBar()
     {
+        var factory = new MenuBarFactory();
 
-        var firstMenuModels = new ArrayList<IMenuItemModel>();
-        firstMenuModels.add(new MenuItemModel("Системная схема", KeyEvent.VK_S, e -> {
+        var lookAndFeelMenuModel = new MenuModel("Режим отображения",
+                "Управление режимом отображения приложения",
+                KeyEvent.VK_V);
+        lookAndFeelMenuModel.addMenuItemModel(new MenuItemModel("Системная схема", KeyEvent.VK_S, e -> {
             setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             this.invalidate();
         }));
-        firstMenuModels.add(new MenuItemModel("Универсальная схема", KeyEvent.VK_S, e -> {
+        lookAndFeelMenuModel.addMenuItemModel(new MenuItemModel("Универсальная схема", KeyEvent.VK_S, e -> {
             setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
             this.invalidate();
         }));
-        var lookAndFeelMenuModel = new MenuModel("Режим отображения",
-                "Управление режимом отображения приложения",
-                KeyEvent.VK_V, firstMenuModels);
+        factory.addMenu(lookAndFeelMenuModel);
 
-
-        var secondMenuModels = new ArrayList<IMenuItemModel>();
-        secondMenuModels.add(new MenuItemModel("Сообщение в лог", KeyEvent.VK_S,
+        var testMenuModel = new MenuModel("Тесты", "Тестовые команды",
+                KeyEvent.VK_T);
+        testMenuModel.addMenuItemModel(new MenuItemModel("Сообщение в лог", KeyEvent.VK_S,
                 e -> Logger.debug("Новая строка")));
+        factory.addMenu(testMenuModel);
 
-        var testMenuModel = new MenuModel("Тесты", "Тестовые команды", KeyEvent.VK_T, secondMenuModels);
-
-        var factory = new MenuBarFactory(new ArrayList<>(Arrays.asList(lookAndFeelMenuModel, testMenuModel)));
         return factory.createMenuBar();
     }
     
@@ -120,7 +119,7 @@ public class MainApplicationFrame extends JFrame
 
     private void onClose() {
 
-        var n = JOptionPane.showOptionDialog(new JFrame(), "Are you sure?", "Do you want close program?",
+        var n = JOptionPane.showOptionDialog(new JFrame(), "Are you sure?", null,
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Yes", "No"},
                 JOptionPane.YES_OPTION);
 

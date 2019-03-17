@@ -16,6 +16,14 @@ public class MenuBarFactory {
         this.models = models;
     }
 
+    public MenuBarFactory() {
+        this.models = new ArrayList<>();
+    }
+
+    public void addMenu(IMenu model) {
+        models.add(model);
+    }
+
     public JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 

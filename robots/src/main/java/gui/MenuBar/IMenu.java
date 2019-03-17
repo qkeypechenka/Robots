@@ -8,4 +8,5 @@ public interface IMenu {
     String getText();
     int getKeyEvent();
     ArrayList<IMenuItemModel> getModels();
+    void addMenuItemModel(IMenuItemModel model);
 }

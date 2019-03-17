@@ -17,6 +17,13 @@ public class MenuModel implements IMenu {
         this.models = models;
     }
 
+    public MenuModel(String text, String description, int keyEvent) {
+        this.text = text;
+        this.description = description;
+        this.keyEvent = keyEvent;
+        models = new ArrayList<>();
+    }
+
     @Override
     public String getAccessibleDescription() {
         return description;
@@ -35,5 +42,10 @@ public class MenuModel implements IMenu {
     @Override
     public ArrayList<IMenuItemModel> getModels() {
         return models;
+    }
+
+    @Override
+    public void addMenuItemModel(IMenuItemModel model) {
+        models.add(model);
     }
 }
