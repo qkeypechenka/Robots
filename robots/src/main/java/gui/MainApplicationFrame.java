@@ -3,9 +3,6 @@ package main.java.gui;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 import javax.swing.*;
 
@@ -14,25 +11,29 @@ import main.java.log.Logger;
 
 public class MainApplicationFrame extends JFrame
 {
-    private final JDesktopPane desktopPane = new JDesktopPane();
-    
+    private final JDesktopPane mainWindow = new JDesktopPane();
+
     public MainApplicationFrame() {
-        //Make the big window be indented 50 pixels from each edge
-        //of the screen.
+        //Сделали под экран наше приложение с отступом в (50, 50) от сторон экрана
         int inset = 50;        
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset,
             screenSize.width  - inset*2,
             screenSize.height - inset*2);
 
-        setContentPane(desktopPane);
+        setContentPane(mainWindow);
         
         
         LogWindow logWindow = createLogWindow();
         addWindow(logWindow);
 
-        GameWindow gameWindow = new GameWindow();
-        gameWindow.setSize(400,  400);
+        int gameWindowWidth = 400;
+        int gameWindowHeight = 400;
+
+        GameWindow gameWindow = new GameWindow(gameWindowWidth, gameWindowHeight);
+        gameWindow.setLocation((screenSize.width - gameWindowWidth)/2,
+                (screenSize.height- gameWindowHeight)/2);
+        gameWindow.setSize(gameWindowWidth,  gameWindowHeight);
         addWindow(gameWindow);
 
         setJMenuBar(generateMenuBar());
@@ -59,7 +60,7 @@ public class MainApplicationFrame extends JFrame
     
     private void addWindow(JInternalFrame frame)
     {
-        desktopPane.add(frame);
+        mainWindow.add(frame);
         frame.setVisible(true);
     }
     

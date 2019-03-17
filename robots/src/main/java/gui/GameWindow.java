@@ -6,10 +6,11 @@ import javax.swing.JPanel;
 
 public class GameWindow extends JInternalFrame
 {
-    public GameWindow()
+    public GameWindow(int gameWindowWidth, int gameWindowHeight)
     {
         super("Игровое поле", true, true, true, true);
-        GameVisualizer visualizer = new GameVisualizer();
+        GameVisualizer visualizer = new GameVisualizer(gameWindowWidth, gameWindowHeight);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);

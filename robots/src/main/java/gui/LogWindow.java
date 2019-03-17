@@ -25,6 +25,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener
         logContent.setSize(200, 500);
         
         JPanel panel = new JPanel(new BorderLayout());
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         panel.add(logContent, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();
