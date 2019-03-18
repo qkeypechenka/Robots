@@ -7,8 +7,8 @@ public class GameLogic {
 
     private static final double maxAngularVelocity = 0.001;
 
-    private volatile int targetPositionX = 150;
-    private volatile int targetPositionY = 100;
+    private volatile int targetPositionX = Constants.defaultTargetPositionX;
+    private volatile int targetPositionY = Constants.defaultTargetPositionY;
 
     private ArrayList<RobotStructure> robots = new ArrayList<>();
 
@@ -35,7 +35,7 @@ public class GameLogic {
         for (RobotStructure robot : getRobots()){
             double distance = RobotMath.distance(getTargetPositionX(), getTargetPositionY(),
                     robot.getRobotPositionX(), robot.getRobotPositionY());
-            if (distance < 0.5)
+            if (distance < Constants.minimalDistance)
             {
                 return;
             }
@@ -58,6 +58,6 @@ public class GameLogic {
 
     public void createRobot(double x, double y){
         RobotStructure r = new RobotStructure(x, y);
-        getRobots().add(r);
+        robots.add(r);
     }
 }

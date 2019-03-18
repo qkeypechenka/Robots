@@ -34,7 +34,7 @@ public class RobotMath {
 
     public static int round(double value)
     {
-        return (int)(value + 0.5);
+        return (int) Math.round(value + 0.5);
     }
 
 }

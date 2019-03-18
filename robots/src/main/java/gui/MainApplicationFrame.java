@@ -27,7 +27,7 @@ public class MainApplicationFrame extends JFrame
         LogWindow logWindow = createLogWindow();
         addWindow(logWindow);
 
-        GameWindow gameWindow = new GameWindow(400, 400);
+        GameWindow gameWindow = new GameWindow(Constants.gameWindowWidth, Constants.gameWindowHeight);
         gameWindow.setLocation((screenSize.width - GameWindow.getGameWindowWidth())/2,
                 (screenSize.height - GameWindow.getGameWindowHeight())/2);
         gameWindow.setSize(GameWindow.getGameWindowWidth(),  GameWindow.getGameWindowHeight());
@@ -48,7 +48,7 @@ public class MainApplicationFrame extends JFrame
     {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
         logWindow.setLocation(10,10);
-        logWindow.setSize(300, 800);
+        logWindow.setSize(Constants.logWindowWidth, Constants.logWindowHeight);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
         Logger.debug("Протокол работает");

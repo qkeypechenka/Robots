@@ -2,24 +2,21 @@ package main.java.log;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Queue;
 
-/**
- * Что починить:
- * 1. Этот класс порождает утечку ресурсов (связанные слушатели оказываются
- * удерживаемыми в памяти)
- */
 public class LogWindowSource
 {
-    private int iQueueLength;
+    private int queueLength;
 
-    private ArrayList<LogEntry> messages;
+    private Queue<LogEntry> messages;
     private final ArrayList<LogChangeListener> listeners;
 
-    public LogWindowSource(int iQueueLength)
+    public LogWindowSource(int queueLength)
     {
-        this.iQueueLength = iQueueLength;
-        messages = new ArrayList<LogEntry>(iQueueLength);
-        listeners = new ArrayList<LogChangeListener>();
+        this.queueLength = queueLength;
+        messages = new LinkedList<>();
+        listeners = new ArrayList<>();
     }
 
     public void registerListener(LogChangeListener listener)
@@ -38,11 +35,11 @@ public class LogWindowSource
         }
     }
 
-    void append(LogLevel logLevel, String strMessage)
+    public void append(LogLevel logLevel, String strMessage)
     {
         LogEntry entry = new LogEntry(logLevel, strMessage);
-        if (messages.size() >= iQueueLength) {
-            messages.remove(0);
+        if (messages.size() >= queueLength) {
+            messages.poll();
         }
         messages.add(entry);
 
@@ -65,7 +62,7 @@ public class LogWindowSource
             return Collections.emptyList();
         }
         int indexTo = Math.min(startFrom + count, messages.size());
-        return messages.subList(startFrom, indexTo);
+        return ((LinkedList<LogEntry>) messages).subList(startFrom, indexTo);
     }
 
     public Iterable<LogEntry> all()

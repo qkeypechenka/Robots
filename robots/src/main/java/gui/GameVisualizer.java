@@ -22,7 +22,7 @@ public class GameVisualizer extends JPanel
 
     public GameVisualizer()
     {
-        gameLogic.createRobot(100, 100);
+        gameLogic.createRobot(Constants.robotStartX, Constants.robotStartY);
         Timer timer = new Timer("events generator", true);
         timer.schedule(new TimerTask()
         {
@@ -31,7 +31,7 @@ public class GameVisualizer extends JPanel
             {
                 onRedrawEvent();
             }
-        }, 0, 50);
+        }, 0, Constants.defaultPeriod);
         timer.schedule(new TimerTask()
         {
             @Override
@@ -39,7 +39,7 @@ public class GameVisualizer extends JPanel
             {
                 gameLogic.onModelUpdateEvent();
             }
-        }, 0, 10);
+        }, 0, Constants.shortPeriod);
         addMouseListener(new MouseAdapter()
         {
             @Override
