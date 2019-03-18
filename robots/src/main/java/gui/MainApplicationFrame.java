@@ -27,13 +27,10 @@ public class MainApplicationFrame extends JFrame
         LogWindow logWindow = createLogWindow();
         addWindow(logWindow);
 
-        int gameWindowWidth = 400;
-        int gameWindowHeight = 400;
-
-        GameWindow gameWindow = new GameWindow(gameWindowWidth, gameWindowHeight);
-        gameWindow.setLocation((screenSize.width - gameWindowWidth)/2,
-                (screenSize.height- gameWindowHeight)/2);
-        gameWindow.setSize(gameWindowWidth,  gameWindowHeight);
+        GameWindow gameWindow = new GameWindow(400, 400);
+        gameWindow.setLocation((screenSize.width - GameWindow.getGameWindowWidth())/2,
+                (screenSize.height - GameWindow.getGameWindowHeight())/2);
+        gameWindow.setSize(GameWindow.getGameWindowWidth(),  GameWindow.getGameWindowHeight());
         addWindow(gameWindow);
 
         setJMenuBar(generateMenuBar());
