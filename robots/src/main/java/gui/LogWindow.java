@@ -6,15 +6,21 @@ import java.awt.TextArea;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
+import main.java.Controllers.Closable;
+import main.java.Controllers.CloseOptions;
+import main.java.Controllers.WindowController;
 import main.java.log.LogChangeListener;
 import main.java.log.LogEntry;
 import main.java.log.LogWindowSource;
 
-public class LogWindow extends JInternalFrame implements LogChangeListener
+public class LogWindow extends JInternalFrame implements LogChangeListener, Closable
 {
     private LogWindowSource logSource;
     private TextArea logContent;
+    private WindowController closeController;
 
     public LogWindow(LogWindowSource logSource) 
     {
@@ -30,6 +36,15 @@ public class LogWindow extends JInternalFrame implements LogChangeListener
         getContentPane().add(panel);
         pack();
         updateLogContent();
+
+        closeController = new WindowController(this);
+
+        addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosing(InternalFrameEvent e) {
+                closeController.onClose(CloseOptions.DispsoseOnly);
+            }
+        });
     }
 
     private void updateLogContent()

@@ -1,17 +1,20 @@
 package main.java.gui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
 
+import main.java.Controllers.Closable;
+import main.java.Controllers.CloseOptions;
+import main.java.Controllers.WindowController;
 import main.java.gui.MenuBar.*;
 import main.java.log.Logger;
 
-public class MainApplicationFrame extends JFrame
+public class MainApplicationFrame extends JFrame implements Closable
 {
     private final JDesktopPane mainWindow = new JDesktopPane();
+    private WindowController closeController;
 
     public MainApplicationFrame() {
         //Сделали под экран наше приложение с отступом в (50, 50) от сторон экрана
@@ -36,10 +39,12 @@ public class MainApplicationFrame extends JFrame
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
+        closeController = new WindowController(this);
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                onClose();
+                closeController.onClose(CloseOptions.Full);
             }
         });
     }
@@ -68,7 +73,7 @@ public class MainApplicationFrame extends JFrame
         menuModel.addMenuItemModel(new MenuItemModel("New", KeyEvent.VK_N,
                 e -> Logger.debug("Pressed new")));
         menuModel.addMenuItemModel(new MenuItemModel("Quit", KeyEvent.VK_Q,
-                e -> onClose()));
+                e -> closeController.onClose(CloseOptions.Full)));
 
         menuBarFactory.addMenu(menuModel);
 
@@ -112,18 +117,6 @@ public class MainApplicationFrame extends JFrame
             | IllegalAccessException | UnsupportedLookAndFeelException e)
         {
             // just ignore
-        }
-    }
-
-    private void onClose() {
-
-        var n = JOptionPane.showOptionDialog(new JFrame(), "Are you sure?", null,
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Yes", "No"},
-                JOptionPane.YES_OPTION);
-
-        if (n == JOptionPane.YES_OPTION) {
-            this.dispose();
-            System.exit(0);
         }
     }
 }
