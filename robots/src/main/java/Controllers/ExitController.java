@@ -3,11 +3,11 @@ package main.java.Controllers;
 import javax.swing.*;
 
 
-public class WindowController{
+public class ExitController {
 
     private Closable window;
 
-    public WindowController(Closable window) {
+    public ExitController(Closable window) {
         this.window = window;
     }
 
@@ -26,7 +26,6 @@ public class WindowController{
         if (desicion == JOptionPane.YES_OPTION) {
             switch (option) {
                 case Full:
-                    dispose();
                     exit();
                 case DispsoseOnly:
                     dispose();
