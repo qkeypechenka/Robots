@@ -23,9 +23,10 @@ public class ExitController {
         var desicion = JOptionPane.showOptionDialog(new JFrame(), "Are you sure?", null,
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Yes", "No"},
                 JOptionPane.YES_OPTION);
+
         if (desicion == JOptionPane.YES_OPTION) {
             switch (option) {
-                case Full:
+                case Exit:
                     exit();
                 case DispsoseOnly:
                     dispose();

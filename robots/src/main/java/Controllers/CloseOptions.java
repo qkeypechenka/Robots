@@ -2,6 +2,6 @@ package main.java.Controllers;
 
 public enum CloseOptions {
 
-    Full,
+    Exit,
     DispsoseOnly
 }

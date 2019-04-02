@@ -7,14 +7,14 @@ import javax.swing.*;
 
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
-import main.java.Controllers.WindowController;
+import main.java.Controllers.ExitController;
 import main.java.gui.MenuBar.*;
 import main.java.log.Logger;
 
 public class MainApplicationFrame extends JFrame implements Closable
 {
     private final JDesktopPane mainWindow = new JDesktopPane();
-    private WindowController closeController;
+    private ExitController closeController;
 
     public MainApplicationFrame() {
         //Сделали под экран наше приложение с отступом в (50, 50) от сторон экрана
@@ -31,20 +31,19 @@ public class MainApplicationFrame extends JFrame implements Closable
         addWindow(logWindow);
 
         GameWindow gameWindow = new GameWindow(Constants.gameWindowWidth, Constants.gameWindowHeight);
-        gameWindow.setLocation((screenSize.width - GameWindow.getGameWindowWidth())/2,
-                (screenSize.height - GameWindow.getGameWindowHeight())/2);
-        gameWindow.setSize(GameWindow.getGameWindowWidth(),  GameWindow.getGameWindowHeight());
+        gameWindow.setLocation((screenSize.width/3), (screenSize.height/3));
+        gameWindow.setSize(Constants.gameWindowWidth,  Constants.gameWindowHeight);
         addWindow(gameWindow);
 
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
-        closeController = new WindowController(this);
+        closeController = new ExitController(this);
 
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                closeController.onClose(CloseOptions.Full);
+                closeController.onClose(CloseOptions.Exit);
             }
         });
     }
@@ -73,7 +72,7 @@ public class MainApplicationFrame extends JFrame implements Closable
         menuModel.addMenuItemModel(new MenuItemModel("New", KeyEvent.VK_N,
                 e -> Logger.debug("Pressed new")));
         menuModel.addMenuItemModel(new MenuItemModel("Quit", KeyEvent.VK_Q,
-                e -> closeController.onClose(CloseOptions.Full)));
+                e -> closeController.onClose(CloseOptions.Exit)));
 
         menuBarFactory.addMenu(menuModel);
 

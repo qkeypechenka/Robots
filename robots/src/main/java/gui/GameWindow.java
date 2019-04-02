@@ -2,15 +2,11 @@ package main.java.gui;
 
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
-import main.java.Controllers.WindowController;
+import main.java.Controllers.ExitController;
 
 import java.awt.BorderLayout;
-import java.awt.event.HierarchyBoundsListener;
-import java.awt.event.HierarchyEvent;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
@@ -19,7 +15,7 @@ public class GameWindow extends JInternalFrame implements Closable
     private static int gameWindowWidth;
     private static int gameWindowHeight;
 
-    private WindowController closeController;
+    private ExitController closeController;
 
     public static int getGameWindowWidth(){
         return gameWindowWidth;
@@ -40,7 +36,7 @@ public class GameWindow extends JInternalFrame implements Closable
         panel.add(visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();
-        closeController = new WindowController(this);
+        closeController = new ExitController(this);
 
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
