@@ -75,11 +75,11 @@ public class MainApplicationFrame extends JFrame implements Closable
         var windowModel = WindowSerializer.deserializeWindow(Constants.gameWindow);
         GameWindow stored;
         if (windowModel == null) {
-            stored = new GameWindow(Constants.gameWindowWidth, Constants.gameWindowHeight);
+            stored = new GameWindow(this, Constants.gameWindowWidth, Constants.gameWindowHeight);
             stored.setLocation((screenSize.width / 3), (screenSize.height / 3));
             stored.setSize(Constants.gameWindowWidth, Constants.gameWindowHeight);
         } else {
-            stored = new GameWindow(windowModel.width, windowModel.height);
+            stored = new GameWindow(this, windowModel.width, windowModel.height);
             stored.setLocation(windowModel.xPosition, windowModel.yPosition);
             stored.setSize(windowModel.width, windowModel.height);
             if (windowModel.state == WindowState.Minimized && stored.isIconifiable()) {
@@ -94,7 +94,7 @@ public class MainApplicationFrame extends JFrame implements Closable
         return stored;
     }
     
-    private void addWindow(JInternalFrame frame)
+    void addWindow(JInternalFrame frame)
     {
         mainWindow.add(frame);
         frame.setVisible(true);

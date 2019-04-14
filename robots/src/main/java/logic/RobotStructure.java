@@ -1,8 +1,10 @@
 package main.java.logic;
 
+import java.util.Observable;
 import main.java.gui.GameWindow;
 
-public class RobotStructure {
+
+public class RobotStructure extends Observable{
 
     private volatile double robotPositionX;
     private volatile double robotPositionY;
@@ -36,5 +38,7 @@ public class RobotStructure {
             robotPositionY = newY;
         double angleForNormalizing = robotDirection + angularVelocity * 10;
         robotDirection = RobotMath.asNormalizedRadians(angleForNormalizing);
+        setChanged();
+        notifyObservers();
     }
 }

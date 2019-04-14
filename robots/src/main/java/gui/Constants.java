@@ -2,14 +2,21 @@ package main.java.gui;
 
 public class Constants {
 
-    // Window Size
+    // Log Window Size
     public static final int logContentWidth = 200;
     public static final int logContentHeight = 500;
     public static final int logWindowWidth = 300;
     public static final int logWindowHeight = 800;
 
+    // Game Window Size
     public static final int gameWindowWidth = 400;
     public static final int gameWindowHeight = 400;
+
+    // Coordinates Window Size
+    public static final int coordinatesContentWidth = 475;
+    public static final int coordinatesContentHeight = 70;
+    public static final int coordinatesWindowWidth = 500;
+    public static final int coordinatesWindowHeight = 80;
 
     // Robot start position
     public static final int robotStartX = 100;
