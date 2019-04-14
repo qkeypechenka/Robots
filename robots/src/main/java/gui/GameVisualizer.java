@@ -18,11 +18,12 @@ import javax.swing.JPanel;
 
 public class GameVisualizer extends JPanel
 {
-    private GameLogic gameLogic = new GameLogic();
+    private GameLogic gameLogic;
 
-    public GameVisualizer()
+    public GameVisualizer(GameLogic gameLogic)
     {
-        gameLogic.createRobot(Constants.robotStartX, Constants.robotStartY);
+        this.gameLogic = gameLogic;
+        this.gameLogic.createRobot(Constants.robotStartX, Constants.robotStartY);
         Timer timer = new Timer("events generator", true);
         timer.schedule(new TimerTask()
         {
@@ -51,7 +52,7 @@ public class GameVisualizer extends JPanel
         });
         setDoubleBuffered(true);
     }
-    
+
     private void onRedrawEvent()
     {
         EventQueue.invokeLater(this::repaint);
@@ -67,17 +68,17 @@ public class GameVisualizer extends JPanel
                     robot.getRobotDirection());
         drawTarget(g2d, gameLogic.getTargetPositionX(), gameLogic.getTargetPositionY());
     }
-    
+
     private static void fillOval(Graphics g, int centerX, int centerY, int diam1, int diam2)
     {
         g.fillOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
     }
-    
+
     private static void drawOval(Graphics g, int centerX, int centerY, int diam1, int diam2)
     {
         g.drawOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
     }
-    
+
     private void drawRobot(Graphics2D g, int x, int y, double direction)
     {
         AffineTransform t = AffineTransform.getRotateInstance(direction, x, y);
@@ -91,10 +92,10 @@ public class GameVisualizer extends JPanel
         g.setColor(Color.BLACK);
         drawOval(g, x  + 10, y, 5, 5);
     }
-    
+
     private void drawTarget(Graphics2D g, int x, int y)
     {
-        AffineTransform t = AffineTransform.getRotateInstance(0, 0, 0); 
+        AffineTransform t = AffineTransform.getRotateInstance(0, 0, 0);
         g.setTransform(t);
         g.setColor(Color.GREEN);
         fillOval(g, x, y, 5, 5);

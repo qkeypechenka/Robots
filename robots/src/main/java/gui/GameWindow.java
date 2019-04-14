@@ -5,6 +5,8 @@ import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
 import main.java.Serialization.Serializable;
 import main.java.Serialization.WindowState;
+import main.java.logic.GameLogic;
+import main.java.logic.RobotStructure;
 
 import java.awt.BorderLayout;
 import javax.swing.JInternalFrame;
@@ -27,16 +29,20 @@ public class GameWindow extends JInternalFrame implements Closable, Serializable
         return gameWindowHeight;
     }
 
-    public GameWindow(int gameWindowWidth, int gameWindowHeight)
+    public GameWindow(MainApplicationFrame mainAppFrame, int gameWindowWidth, int gameWindowHeight)
     {
         super("Игровое поле", true, true, true, true);
+        GameLogic gameLogic = new GameLogic();
+        GameVisualizer visualizer = new GameVisualizer(gameLogic);
         GameWindow.gameWindowWidth = gameWindowWidth;
         GameWindow.gameWindowHeight = gameWindowHeight;
-        GameVisualizer visualizer = new GameVisualizer();
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);
+
+        CoordinatesWindow coordinatesWindow = createCoordinatesWindow(gameLogic.getRobots().get(0));
+        mainAppFrame.addWindow(coordinatesWindow);
+
         pack();
         exitHandler = new ExitHandler(this);
 
@@ -46,6 +52,16 @@ public class GameWindow extends JInternalFrame implements Closable, Serializable
                 exitHandler.onClose(CloseOptions.DispsoseOnly);
             }
         });
+    }
+
+    private CoordinatesWindow createCoordinatesWindow(RobotStructure robot)
+    {
+        CoordinatesWindow coordinatesWindow = new CoordinatesWindow(robot, Constants.robotStartX, Constants.robotStartY);
+        coordinatesWindow.setLocation(300,10);
+        coordinatesWindow.setSize(Constants.coordinatesWindowWidth,  Constants.coordinatesWindowHeight);
+        setMinimumSize(coordinatesWindow.getSize());
+        coordinatesWindow.pack();
+        return coordinatesWindow;
     }
 
     public WindowState getState() {
