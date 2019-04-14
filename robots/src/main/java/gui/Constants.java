@@ -18,4 +18,8 @@ public class Constants {
     // Timer periods
     public static final int defaultPeriod = 50;
     public static final int shortPeriod = 10;
+
+    // Files for serialization
+    public static final String logWindow = "logWindow.out";
+    public static final String gameWindow = "gameWindow.out";
 }

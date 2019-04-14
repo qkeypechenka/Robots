@@ -1,5 +1,7 @@
 package main.java.Controllers;
 
+import main.java.Serialization.WindowSerializer;
+
 import javax.swing.*;
 
 
@@ -20,13 +22,14 @@ public class ExitHandler {
     }
 
     public void onClose(CloseOptions option) {
-        var desicion = JOptionPane.showOptionDialog(new JFrame(), "Are you sure?", null,
+        var decision = JOptionPane.showOptionDialog(new JFrame(), "Are you sure?", null,
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Yes", "No"},
                 JOptionPane.YES_OPTION);
 
-        if (desicion == JOptionPane.YES_OPTION) {
+        if (decision == JOptionPane.YES_OPTION) {
             switch (option) {
                 case Exit:
+                    WindowSerializer.serializeStored();
                     exit();
                 case DispsoseOnly:
                     dispose();

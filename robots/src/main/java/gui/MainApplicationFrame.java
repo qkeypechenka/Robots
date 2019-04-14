@@ -2,12 +2,15 @@ package main.java.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyVetoException;
 
 import javax.swing.*;
 
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
+import main.java.Serialization.WindowSerializer;
+import main.java.Serialization.WindowState;
 import main.java.gui.MenuBar.*;
 import main.java.log.Logger;
 
@@ -25,21 +28,17 @@ public class MainApplicationFrame extends JFrame implements Closable
             screenSize.height - inset*2);
 
         setContentPane(mainWindow);
-        
-        
+
         LogWindow logWindow = createLogWindow();
         addWindow(logWindow);
 
-        GameWindow gameWindow = new GameWindow(Constants.gameWindowWidth, Constants.gameWindowHeight);
-        gameWindow.setLocation((screenSize.width/3), (screenSize.height/3));
-        gameWindow.setSize(Constants.gameWindowWidth,  Constants.gameWindowHeight);
+        GameWindow gameWindow = createGameWindow(screenSize);
         addWindow(gameWindow);
 
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
         exitHandler = new ExitHandler(this);
-
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -50,13 +49,49 @@ public class MainApplicationFrame extends JFrame implements Closable
 
     private LogWindow createLogWindow()
     {
-        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
-        logWindow.setLocation(10,10);
-        logWindow.setSize(Constants.logWindowWidth, Constants.logWindowHeight);
-        setMinimumSize(logWindow.getSize());
-        logWindow.pack();
+        var windowModel = WindowSerializer.deserializeWindow(Constants.logWindow);
+        LogWindow stored = new LogWindow(Logger.getDefaultLogSource());
+        if (windowModel == null) {
+            stored.setLocation(10, 10);
+            stored.setSize(Constants.logWindowWidth, Constants.logWindowHeight);
+            stored.pack();
+        } else {
+            stored.setLocation(windowModel.xPosition, windowModel.yPosition);
+            stored.setSize(windowModel.width, windowModel.height);
+            if (windowModel.state == WindowState.Minimized && stored.isIconifiable()) {
+                try {
+                    stored.setIcon(true);
+                } catch (PropertyVetoException e) {
+                    System.out.println("Cannot change state");
+                }
+            }
+        }
         Logger.debug("Протокол работает");
-        return logWindow;
+        WindowSerializer.addWindow(stored, Constants.logWindow);
+        return stored;
+    }
+
+    private GameWindow createGameWindow(Dimension screenSize) {
+        var windowModel = WindowSerializer.deserializeWindow(Constants.gameWindow);
+        GameWindow stored;
+        if (windowModel == null) {
+            stored = new GameWindow(Constants.gameWindowWidth, Constants.gameWindowHeight);
+            stored.setLocation((screenSize.width / 3), (screenSize.height / 3));
+            stored.setSize(Constants.gameWindowWidth, Constants.gameWindowHeight);
+        } else {
+            stored = new GameWindow(windowModel.width, windowModel.height);
+            stored.setLocation(windowModel.xPosition, windowModel.yPosition);
+            stored.setSize(windowModel.width, windowModel.height);
+            if (windowModel.state == WindowState.Minimized && stored.isIconifiable()) {
+                try {
+                    stored.setIcon(true);
+                } catch (PropertyVetoException e) {
+                    System.out.println("Cannot change state");
+                }
+            }
+        }
+        WindowSerializer.addWindow(stored, Constants.gameWindow);
+        return stored;
     }
     
     private void addWindow(JInternalFrame frame)
