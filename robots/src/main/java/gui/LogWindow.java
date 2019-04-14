@@ -11,7 +11,7 @@ import javax.swing.event.InternalFrameEvent;
 
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
-import main.java.Controllers.ExitController;
+import main.java.Controllers.ExitHandler;
 import main.java.log.LogChangeListener;
 import main.java.log.LogEntry;
 import main.java.log.LogWindowSource;
@@ -20,7 +20,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Clos
 {
     private LogWindowSource logSource;
     private TextArea logContent;
-    private ExitController closeController;
+    private ExitHandler exitHandler;
 
     public LogWindow(LogWindowSource logSource) 
     {
@@ -37,12 +37,12 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Clos
         pack();
         updateLogContent();
 
-        closeController = new ExitController(this);
+        exitHandler = new ExitHandler(this);
 
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
             public void internalFrameClosing(InternalFrameEvent e) {
-                closeController.onClose(CloseOptions.DispsoseOnly);
+                exitHandler.onClose(CloseOptions.DispsoseOnly);
             }
         });
     }

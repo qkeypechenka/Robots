@@ -3,11 +3,11 @@ package main.java.Controllers;
 import javax.swing.*;
 
 
-public class ExitController {
+public class ExitHandler {
 
     private Closable window;
 
-    public ExitController(Closable window) {
+    public ExitHandler(Closable window) {
         this.window = window;
     }
 
