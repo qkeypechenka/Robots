@@ -3,6 +3,8 @@ package main.java.gui;
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
+import main.java.Serialization.Serializable;
+import main.java.Serialization.WindowState;
 import main.java.logic.RobotStructure;
 
 import java.awt.*;
@@ -13,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
-public class CoordinatesWindow extends JInternalFrame implements Closable, Observer
+public class CoordinatesWindow extends JInternalFrame implements Closable, Observer, Serializable
 {
     private static double robotCoordinateX;
     private static double robotCoordinateY;
@@ -42,6 +44,10 @@ public class CoordinatesWindow extends JInternalFrame implements Closable, Obser
                 closeController.onClose(CloseOptions.DispsoseOnly);
             }
         });
+    }
+
+    public WindowState getState() {
+        return this.isIcon() ? WindowState.Minimized : WindowState.Default;
     }
 
     @Override

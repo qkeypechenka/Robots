@@ -29,4 +29,5 @@ public class Constants {
     // Files for serialization
     public static final String logWindow = "logWindow.out";
     public static final String gameWindow = "gameWindow.out";
+    public static final String coordinatesWindow = "coordinatesWindow.out";
 }
