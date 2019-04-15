@@ -3,7 +3,7 @@ package main.java.gui;
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
-import main.java.Serialization.Serializable;
+import main.java.Serialization.WindowSerializable;
 import main.java.Serialization.WindowState;
 import main.java.logic.RobotStructure;
 
@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
-public class CoordinatesWindow extends JInternalFrame implements Closable, Observer, Serializable
+public class CoordinatesWindow extends JInternalFrame implements Closable, Observer, WindowSerializable
 {
     private static double robotCoordinateX;
     private static double robotCoordinateY;

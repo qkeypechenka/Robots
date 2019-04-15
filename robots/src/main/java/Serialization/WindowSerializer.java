@@ -5,13 +5,13 @@ import java.util.HashMap;
 
 public class WindowSerializer {
 
-    private static HashMap<Serializable, String> windows = new HashMap<>();
+    private static HashMap<WindowSerializable, String> windows = new HashMap<>();
 
-    public static void addWindow(Serializable frame, String path) {
+    public static void addWindow(WindowSerializable frame, String path) {
         windows.put(frame, path);
     }
 
-    private static void serializeWindow(String path, Serializable frame) {
+    private static void serializeWindow(String path, WindowSerializable frame) {
         var window = convertToModel(frame);
         try {
             var fos = new FileOutputStream(path);
@@ -40,7 +40,7 @@ public class WindowSerializer {
         }
     }
 
-    private static Window convertToModel(Serializable frame) {
+    private static Window convertToModel(WindowSerializable frame) {
         var window = new Window();
         window.yPosition = frame.getY();
         window.xPosition = frame.getX();

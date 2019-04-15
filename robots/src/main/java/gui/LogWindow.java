@@ -12,13 +12,13 @@ import javax.swing.event.InternalFrameEvent;
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
-import main.java.Serialization.Serializable;
+import main.java.Serialization.WindowSerializable;
 import main.java.Serialization.WindowState;
 import main.java.log.LogChangeListener;
 import main.java.log.LogEntry;
 import main.java.log.LogWindowSource;
 
-public class LogWindow extends JInternalFrame implements LogChangeListener, Closable, Serializable
+public class LogWindow extends JInternalFrame implements LogChangeListener, Closable, WindowSerializable
 {
     private LogWindowSource logSource;
     private TextArea logContent;

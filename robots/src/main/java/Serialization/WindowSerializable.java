@@ -1,6 +1,6 @@
 package main.java.Serialization;
 
-public interface Serializable {
+public interface WindowSerializable {
 
     public int getWidth();
     public int getHeight();

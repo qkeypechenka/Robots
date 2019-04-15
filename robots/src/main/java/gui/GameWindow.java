@@ -3,7 +3,7 @@ package main.java.gui;
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
-import main.java.Serialization.Serializable;
+import main.java.Serialization.WindowSerializable;
 import main.java.Serialization.WindowSerializer;
 import main.java.Serialization.WindowState;
 import main.java.logic.GameLogic;
@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
-public class GameWindow extends JInternalFrame implements Closable, Serializable
+public class GameWindow extends JInternalFrame implements Closable, WindowSerializable
 {
     private static int gameWindowWidth;
     private static int gameWindowHeight;
