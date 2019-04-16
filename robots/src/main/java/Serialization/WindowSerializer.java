@@ -1,5 +1,6 @@
 package main.java.Serialization;
 
+import java.beans.PropertyVetoException;
 import java.io.*;
 import java.util.HashMap;
 
@@ -38,6 +39,21 @@ public class WindowSerializer {
         } catch (IOException | ClassNotFoundException e) {
             return null;
         }
+    }
+
+    public static boolean deserializeInto(WindowSerializable frame, String path) {
+        var windowModel = deserializeWindow(path);
+        if (windowModel == null) {
+            return false;
+        }
+        frame.setSize(windowModel.width, windowModel.height);
+        frame.setLocation(windowModel.xPosition, windowModel.yPosition);
+        try {
+            frame.setIcon(windowModel.state == WindowState.Minimized);
+        } catch (PropertyVetoException ignored) {
+
+        }
+        return true;
     }
 
     private static Window convertToModel(WindowSerializable frame) {

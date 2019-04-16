@@ -49,22 +49,12 @@ public class MainApplicationFrame extends JFrame implements Closable
 
     private LogWindow createLogWindow()
     {
-        var windowModel = WindowSerializer.deserializeWindow(Constants.logWindow);
         LogWindow stored = new LogWindow(Logger.getDefaultLogSource());
-        if (windowModel == null) {
+        var result = WindowSerializer.deserializeInto(stored, Constants.logWindow);
+        if (!result) {
             stored.setLocation(10, 10);
             stored.setSize(Constants.logWindowWidth, Constants.logWindowHeight);
             stored.pack();
-        } else {
-            stored.setLocation(windowModel.xPosition, windowModel.yPosition);
-            stored.setSize(windowModel.width, windowModel.height);
-            if (windowModel.state == WindowState.Minimized && stored.isIconifiable()) {
-                try {
-                    stored.setIcon(true);
-                } catch (PropertyVetoException e) {
-                    System.out.println("Cannot change state");
-                }
-            }
         }
         Logger.debug("Протокол работает");
         WindowSerializer.addWindow(stored, Constants.logWindow);
@@ -80,15 +70,7 @@ public class MainApplicationFrame extends JFrame implements Closable
             stored.setSize(Constants.gameWindowWidth, Constants.gameWindowHeight);
         } else {
             stored = new GameWindow(this, windowModel.width, windowModel.height);
-            stored.setLocation(windowModel.xPosition, windowModel.yPosition);
-            stored.setSize(windowModel.width, windowModel.height);
-            if (windowModel.state == WindowState.Minimized && stored.isIconifiable()) {
-                try {
-                    stored.setIcon(true);
-                } catch (PropertyVetoException e) {
-                    System.out.println("Cannot change state");
-                }
-            }
+            WindowSerializer.deserializeInto(stored, Constants.gameWindow);
         }
         WindowSerializer.addWindow(stored, Constants.gameWindow);
         return stored;

@@ -58,22 +58,15 @@ public class GameWindow extends JInternalFrame implements Closable, WindowSerial
 
     private CoordinatesWindow createCoordinatesWindow(RobotStructure robot)
     {
-        var windowModel = WindowSerializer.deserializeWindow(Constants.coordinatesWindow);
         CoordinatesWindow coordinatesWindow = new CoordinatesWindow(robot, Constants.robotStartX, Constants.robotStartY);
-        if (windowModel == null) {
+        var result = WindowSerializer.deserializeInto(coordinatesWindow, Constants.coordinatesWindow);
+        if (!result) {
             coordinatesWindow.setLocation(300, 10);
             coordinatesWindow.setSize(Constants.coordinatesWindowWidth, Constants.coordinatesWindowHeight);
             setMinimumSize(coordinatesWindow.getSize());
             coordinatesWindow.pack();
-        } else {
-            coordinatesWindow.setSize(windowModel.width, windowModel.height);
-            coordinatesWindow.setLocation(windowModel.xPosition, windowModel.yPosition);
-            try {
-                coordinatesWindow.setIcon(windowModel.state == WindowState.Minimized);
-            } catch (PropertyVetoException e) {
-                System.out.println("Cannot change state");
-            }
         }
+
         WindowSerializer.addWindow(coordinatesWindow, Constants.coordinatesWindow);
         return coordinatesWindow;
     }
