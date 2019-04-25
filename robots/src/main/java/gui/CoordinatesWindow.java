@@ -20,6 +20,8 @@ public class CoordinatesWindow extends JInternalFrame implements Closable, Obser
     private static double robotCoordinateX;
     private static double robotCoordinateY;
 
+    private int updateCounter;
+
     private TextArea coordinatesContent;
     private ExitHandler closeController;
 
@@ -52,7 +54,11 @@ public class CoordinatesWindow extends JInternalFrame implements Closable, Obser
 
     @Override
     public void update(Observable observable, Object o) {
-        updateCoordinatesContent((RobotStructure)observable);
+        if (updateCounter == 25){
+            updateCoordinatesContent((RobotStructure)observable);
+            updateCounter = 0;
+        }
+        updateCounter++;
     }
 
     private void updateCoordinatesContent(RobotStructure robot){
