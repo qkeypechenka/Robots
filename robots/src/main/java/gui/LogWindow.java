@@ -3,6 +3,7 @@ package main.java.gui;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.TextArea;
+import java.util.ResourceBundle;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
@@ -24,9 +25,9 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Clos
     private TextArea logContent;
     private ExitHandler exitHandler;
 
-    public LogWindow(LogWindowSource logSource) 
+    public LogWindow(LogWindowSource logSource, ResourceBundle resources)
     {
-        super("Протокол работы", true, true, true, true);
+        super(resources.getString("LogWindowTitle"), true, true, true, true);
         this.logSource = logSource;
         this.logSource.registerListener(this);
         logContent = new TextArea("");
@@ -38,7 +39,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Clos
         pack();
         updateLogContent();
 
-        exitHandler = new ExitHandler(this);
+        exitHandler = new ExitHandler(this, resources);
 
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override

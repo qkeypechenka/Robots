@@ -30,4 +30,7 @@ public class Constants {
     public static final String logWindow = "logWindow.out";
     public static final String gameWindow = "gameWindow.out";
     public static final String coordinatesWindow = "coordinatesWindow.out";
+
+    // Localization
+    public static final String localizationBundle = "main.java.Localization.Localization";
 }

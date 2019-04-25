@@ -10,7 +10,7 @@ import main.java.logic.GameLogic;
 import main.java.logic.RobotStructure;
 
 import java.awt.BorderLayout;
-import java.beans.PropertyVetoException;
+import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.event.InternalFrameAdapter;
@@ -20,6 +20,7 @@ public class GameWindow extends JInternalFrame implements Closable, WindowSerial
 {
     private static int gameWindowWidth;
     private static int gameWindowHeight;
+    private ResourceBundle resources;
 
     private ExitHandler exitHandler;
 
@@ -31,13 +32,17 @@ public class GameWindow extends JInternalFrame implements Closable, WindowSerial
         return gameWindowHeight;
     }
 
-    public GameWindow(MainApplicationFrame mainAppFrame, int gameWindowWidth, int gameWindowHeight)
+    public GameWindow(MainApplicationFrame mainAppFrame,
+                      int gameWindowWidth,
+                      int gameWindowHeight,
+                      ResourceBundle resources)
     {
-        super("Игровое поле", true, true, true, true);
+        super(resources.getString("GameWindowTitle"), true, true, true, true);
         GameLogic gameLogic = new GameLogic();
         GameVisualizer visualizer = new GameVisualizer(gameLogic);
         GameWindow.gameWindowWidth = gameWindowWidth;
         GameWindow.gameWindowHeight = gameWindowHeight;
+        this.resources = resources;
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);
@@ -46,7 +51,7 @@ public class GameWindow extends JInternalFrame implements Closable, WindowSerial
         mainAppFrame.addWindow(coordinatesWindow);
 
         pack();
-        exitHandler = new ExitHandler(this);
+        exitHandler = new ExitHandler(this, resources);
 
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
@@ -58,7 +63,10 @@ public class GameWindow extends JInternalFrame implements Closable, WindowSerial
 
     private CoordinatesWindow createCoordinatesWindow(RobotStructure robot)
     {
-        CoordinatesWindow coordinatesWindow = new CoordinatesWindow(robot, Constants.robotStartX, Constants.robotStartY);
+        CoordinatesWindow coordinatesWindow = new CoordinatesWindow(robot,
+                                                                    Constants.robotStartX,
+                                                                    Constants.robotStartY,
+                                                                    resources);
         var result = WindowSerializer.deserializeInto(coordinatesWindow, Constants.coordinatesWindow);
         if (!result) {
             coordinatesWindow.setLocation(300, 10);

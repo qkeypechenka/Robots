@@ -3,14 +3,18 @@ package main.java.Controllers;
 import main.java.Serialization.WindowSerializer;
 
 import javax.swing.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 public class ExitHandler {
 
     private Closable window;
+    public ResourceBundle resources;
 
-    public ExitHandler(Closable window) {
+    public ExitHandler(Closable window, ResourceBundle resources) {
         this.window = window;
+        this.resources = resources;
     }
 
     private void dispose() {
