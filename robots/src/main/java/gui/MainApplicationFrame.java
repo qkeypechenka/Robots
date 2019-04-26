@@ -2,14 +2,13 @@ package main.java.gui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 import javax.swing.*;
 
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
+import main.java.Localization.Localization;
 import main.java.Serialization.WindowSerializer;
 import main.java.gui.MenuBar.*;
 import main.java.log.Logger;
@@ -18,9 +17,6 @@ public class MainApplicationFrame extends JFrame implements Closable
 {
     private final JDesktopPane mainWindow = new JDesktopPane();
     private ExitHandler exitHandler;
-    private Locale ru_locale = new Locale("ru");
-    private Locale en_locale = new Locale("en");
-    private ResourceBundle resources = ResourceBundle.getBundle(Constants.localizationBundle, ru_locale);
 
     public MainApplicationFrame() {
         //Сделали под экран наше приложение с отступом в (50, 50) от сторон экрана
@@ -41,7 +37,7 @@ public class MainApplicationFrame extends JFrame implements Closable
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
-        exitHandler = new ExitHandler(this, resources);
+        exitHandler = new ExitHandler(this);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -52,14 +48,14 @@ public class MainApplicationFrame extends JFrame implements Closable
 
     private LogWindow createLogWindow()
     {
-        LogWindow stored = new LogWindow(Logger.getDefaultLogSource(), resources);
+        LogWindow stored = new LogWindow(Logger.getDefaultLogSource());
         var result = WindowSerializer.deserializeInto(stored, Constants.logWindow);
         if (!result) {
             stored.setLocation(10, 10);
             stored.setSize(Constants.logWindowWidth, Constants.logWindowHeight);
             stored.pack();
         }
-        Logger.debug(resources.getString("DebugMessage"));
+        Logger.debug(Localization.getDebugMessage());
         WindowSerializer.addWindow(stored, Constants.logWindow);
         return stored;
     }
@@ -70,12 +66,11 @@ public class MainApplicationFrame extends JFrame implements Closable
         if (windowModel == null) {
             stored = new GameWindow(this,
                     Constants.gameWindowWidth,
-                    Constants.gameWindowHeight,
-                    resources);
+                    Constants.gameWindowHeight);
             stored.setLocation((screenSize.width / 3), (screenSize.height / 3));
             stored.setSize(Constants.gameWindowWidth, Constants.gameWindowHeight);
         } else {
-            stored = new GameWindow(this, windowModel.width, windowModel.height, resources);
+            stored = new GameWindow(this, windowModel.width, windowModel.height);
             WindowSerializer.deserializeInto(stored, Constants.gameWindow);
         }
         WindowSerializer.addWindow(stored, Constants.gameWindow);
@@ -92,42 +87,42 @@ public class MainApplicationFrame extends JFrame implements Closable
     {
         var factory = new MenuBarFactory();
 
-        var lookAndFeelMenuModel = new MenuModel(resources.getString("LookAndFeelMenuText"),
-                resources.getString("LookAndFeelMenuDescription"),
+        var lookAndFeelMenuModel = new MenuModel(Localization.getLookAndFeelMenuText(),
+                Localization.getLookAndFeelMenuDescription(),
                 KeyEvent.VK_V);
-        lookAndFeelMenuModel.addMenuItemModel(new MenuItemModel(resources.getString("LookAndFeelSystemScheme"),
+        lookAndFeelMenuModel.addMenuItemModel(new MenuItemModel(Localization.getLookAndFeelSystemScheme(),
                 KeyEvent.VK_S, e -> {
             setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             this.invalidate();
         }));
-        lookAndFeelMenuModel.addMenuItemModel(new MenuItemModel(resources.getString("LookAndFeelUniversalScheme"),
+        lookAndFeelMenuModel.addMenuItemModel(new MenuItemModel(Localization.getLookAndFeelUniversalScheme(),
                 KeyEvent.VK_S, e -> {
             setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
             this.invalidate();
         }));
         factory.addMenu(lookAndFeelMenuModel);
 
-        var testMenuModel = new MenuModel(resources.getString("TestMenuText"),
-                resources.getString("TestMenuDescription"),
+        var testMenuModel = new MenuModel(Localization.getTestMenuText(),
+                Localization.getTestMenuDescription(),
                 KeyEvent.VK_T);
-        testMenuModel.addMenuItemModel(new MenuItemModel(resources.getString("TestMenuLogMessageText"), KeyEvent.VK_S,
-                e -> Logger.debug(resources.getString("TestMenuMessage"))));
+        testMenuModel.addMenuItemModel(new MenuItemModel(Localization.getTestMenuLogMessageText(), KeyEvent.VK_S,
+                e -> Logger.debug(Localization.getTestMenuMessage())));
         factory.addMenu(testMenuModel);
 
-        var localizationMenuModel = new MenuModel(resources.getString("LocalizationMenuText"),
-                resources.getString("LocalizationMenuDescription"), KeyEvent.VK_L);
-        localizationMenuModel.addMenuItemModel(new MenuItemModel(resources.getString("LocalizationRussian"),
+        var localizationMenuModel = new MenuModel(Localization.getLocalizationMenuText(),
+                Localization.getLocalizationMenuDescription(), KeyEvent.VK_L);
+        localizationMenuModel.addMenuItemModel(new MenuItemModel(Localization.getLocalizationRussian(),
                 KeyEvent.VK_L,
-                e -> resources = ResourceBundle.getBundle(Constants.localizationBundle, ru_locale)));
-        localizationMenuModel.addMenuItemModel(new MenuItemModel(resources.getString("LocalizationEnglish"),
+                e -> Localization.setRuLocale()));
+        localizationMenuModel.addMenuItemModel(new MenuItemModel(Localization.getLocalizationEnglish(),
                 KeyEvent.VK_L,
-                e -> resources = ResourceBundle.getBundle(Constants.localizationBundle, en_locale)));
+                e -> Localization.setEnLocale()));
         factory.addMenu(localizationMenuModel);
 
-        var exitMenuModel = new MenuModel(resources.getString("OptionsMenuText"),
-                resources.getString("OptionsMenuDescription"),
+        var exitMenuModel = new MenuModel(Localization.getOptionsMenuText(),
+                Localization.getOptionsMenuDescription(),
                 KeyEvent.VK_O);
-        exitMenuModel.addMenuItemModel(new MenuItemModel(resources.getString("OptionsMenuQuit"), KeyEvent.VK_Q,
+        exitMenuModel.addMenuItemModel(new MenuItemModel(Localization.getOptionsMenuQuit(), KeyEvent.VK_Q,
                 e -> exitHandler.onClose(CloseOptions.Exit)));
         factory.addMenu(exitMenuModel);
 

@@ -1,20 +1,17 @@
 package main.java.Controllers;
 
+import main.java.Localization.Localization;
 import main.java.Serialization.WindowSerializer;
 
 import javax.swing.*;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 
 public class ExitHandler {
 
     private Closable window;
-    public ResourceBundle resources;
 
-    public ExitHandler(Closable window, ResourceBundle resources) {
+    public ExitHandler(Closable window) {
         this.window = window;
-        this.resources = resources;
     }
 
     private void dispose() {
@@ -26,8 +23,9 @@ public class ExitHandler {
     }
 
     public void onClose(CloseOptions option) {
-        var decision = JOptionPane.showOptionDialog(new JFrame(), "Are you sure?", null,
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Yes", "No"},
+        var decision = JOptionPane.showOptionDialog(new JFrame(), Localization.getConfirmExit(), null,
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                new Object[] {Localization.getConfirmYes(), Localization.getConfirmNo()},
                 JOptionPane.YES_OPTION);
 
         if (decision == JOptionPane.YES_OPTION) {

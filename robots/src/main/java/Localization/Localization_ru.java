@@ -27,7 +27,10 @@ public class Localization_ru extends ListResourceBundle {
                 {"LocalizationMenuText", "Выбор языка"},
                 {"LocalizationMenuDescription", "Выбор языка"},
                 {"LocalizationRussian", "Русский"},
-                {"LocalizationEnglish", "English"}
+                {"LocalizationEnglish", "English"},
+                {"ConfirmExit", "Вы уверены?"},
+                {"ConfirmYes", "Да"},
+                {"ConfirmNo", "Нет"}
         };
     }
 }

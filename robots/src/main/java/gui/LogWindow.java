@@ -3,7 +3,6 @@ package main.java.gui;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.TextArea;
-import java.util.ResourceBundle;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
@@ -13,6 +12,7 @@ import javax.swing.event.InternalFrameEvent;
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
+import main.java.Localization.Localization;
 import main.java.Serialization.WindowSerializable;
 import main.java.Serialization.WindowState;
 import main.java.log.LogChangeListener;
@@ -25,9 +25,9 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Clos
     private TextArea logContent;
     private ExitHandler exitHandler;
 
-    public LogWindow(LogWindowSource logSource, ResourceBundle resources)
+    public LogWindow(LogWindowSource logSource)
     {
-        super(resources.getString("LogWindowTitle"), true, true, true, true);
+        super(Localization.getLogWindowTitle(), true, true, true, true);
         this.logSource = logSource;
         this.logSource.registerListener(this);
         logContent = new TextArea("");
@@ -39,7 +39,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Clos
         pack();
         updateLogContent();
 
-        exitHandler = new ExitHandler(this, resources);
+        exitHandler = new ExitHandler(this);
 
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override

@@ -3,6 +3,7 @@ package main.java.gui;
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
+import main.java.Localization.Localization;
 import main.java.Serialization.WindowSerializable;
 import main.java.Serialization.WindowState;
 import main.java.logic.RobotStructure;
@@ -10,7 +11,6 @@ import main.java.logic.RobotStructure;
 import java.awt.*;
 import java.util.Observer;
 import java.util.Observable;
-import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.event.InternalFrameAdapter;
@@ -25,23 +25,21 @@ public class CoordinatesWindow extends JInternalFrame implements Closable, Obser
 
     private TextArea coordinatesContent;
     private ExitHandler closeController;
-    private ResourceBundle resources;
 
-    CoordinatesWindow(RobotStructure robot, int robotStartX, int robotStartY, ResourceBundle resources)
+    CoordinatesWindow(RobotStructure robot, int robotStartX, int robotStartY)
     {
-        super(resources.getString("CoordinatesWindowTitle"), true, true, true, true);
+        super(Localization.getCoordinatesWindowTitle(), true, true, true, true);
         robot.addObserver(this);
         coordinatesContent = new TextArea("");
         coordinatesContent.setSize(Constants.coordinatesContentWidth, Constants.coordinatesContentHeight);
         CoordinatesWindow.robotCoordinateX = robotStartX;
         CoordinatesWindow.robotCoordinateY = robotStartY;
-        this.resources = resources;
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(coordinatesContent, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();
         updateCoordinatesContent(robot);
-        closeController = new ExitHandler(this, resources);
+        closeController = new ExitHandler(this);
 
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
@@ -68,10 +66,10 @@ public class CoordinatesWindow extends JInternalFrame implements Closable, Obser
         robotCoordinateX = robot.getRobotPositionX();
         robotCoordinateY = robot.getRobotPositionY();
         StringBuilder text = new StringBuilder();
-        text.append(resources.getString("CoordinatesPositionX"));
+        text.append(Localization.getCoordinatesPositionX());
         text.append(robotCoordinateX);
         text.append('\n');
-        text.append(resources.getString("CoordinatesPositionY"));
+        text.append(Localization.getCoordinatesPositionY());
         text.append(robotCoordinateY);
         coordinatesContent.setFont(new Font("monospaced", Font.PLAIN, 16));
         coordinatesContent.setText(text.toString());
