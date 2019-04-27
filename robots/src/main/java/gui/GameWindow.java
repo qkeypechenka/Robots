@@ -3,6 +3,7 @@ package main.java.gui;
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
+import main.java.Localization.Localizable;
 import main.java.Localization.Localization;
 import main.java.Serialization.WindowSerializable;
 import main.java.Serialization.WindowSerializer;
@@ -16,10 +17,11 @@ import javax.swing.JPanel;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
-public class GameWindow extends JInternalFrame implements Closable, WindowSerializable
+public class GameWindow extends JInternalFrame implements Closable, WindowSerializable, Localizable
 {
     private static int gameWindowWidth;
     private static int gameWindowHeight;
+    private CoordinatesWindow coordinatesWindow;
 
     private ExitHandler exitHandler;
 
@@ -44,7 +46,7 @@ public class GameWindow extends JInternalFrame implements Closable, WindowSerial
         panel.add(visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);
 
-        CoordinatesWindow coordinatesWindow = createCoordinatesWindow(gameLogic.getRobots().get(0));
+        coordinatesWindow = createCoordinatesWindow(gameLogic.getRobots().get(0));
         mainAppFrame.addWindow(coordinatesWindow);
 
         pack();
@@ -77,5 +79,11 @@ public class GameWindow extends JInternalFrame implements Closable, WindowSerial
 
     public WindowState getState() {
         return isIcon() ? WindowState.Minimized : WindowState.Default;
+    }
+
+    @Override
+    public void updateLanguage() {
+        this.title = Localization.getGameWindowTitle();
+        coordinatesWindow.updateLanguage();
     }
 }

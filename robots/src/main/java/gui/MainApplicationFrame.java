@@ -8,14 +8,17 @@ import javax.swing.*;
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
+import main.java.Localization.Localizable;
 import main.java.Localization.Localization;
 import main.java.Serialization.WindowSerializer;
 import main.java.gui.MenuBar.*;
 import main.java.log.Logger;
 
-public class MainApplicationFrame extends JFrame implements Closable
+public class MainApplicationFrame extends JFrame implements Closable, Localizable
 {
     private final JDesktopPane mainWindow = new JDesktopPane();
+    private LogWindow logWindow;
+    private GameWindow gameWindow;
     private ExitHandler exitHandler;
 
     public MainApplicationFrame() {
@@ -28,10 +31,10 @@ public class MainApplicationFrame extends JFrame implements Closable
 
         setContentPane(mainWindow);
 
-        LogWindow logWindow = createLogWindow();
+        logWindow = createLogWindow();
         addWindow(logWindow);
 
-        GameWindow gameWindow = createGameWindow(screenSize);
+        gameWindow = createGameWindow(screenSize);
         addWindow(gameWindow);
 
         setJMenuBar(generateMenuBar());
@@ -112,11 +115,19 @@ public class MainApplicationFrame extends JFrame implements Closable
         var localizationMenuModel = new MenuModel(Localization.getLocalizationMenuText(),
                 Localization.getLocalizationMenuDescription(), KeyEvent.VK_L);
         localizationMenuModel.addMenuItemModel(new MenuItemModel(Localization.getLocalizationRussian(),
-                KeyEvent.VK_L,
-                e -> Localization.setRuLocale()));
+                KeyEvent.VK_E,
+                e -> {
+                    Localization.setRuLocale();
+                    updateLanguage();
+                }
+                ));
         localizationMenuModel.addMenuItemModel(new MenuItemModel(Localization.getLocalizationEnglish(),
-                KeyEvent.VK_L,
-                e -> Localization.setEnLocale()));
+                KeyEvent.VK_R,
+                e -> {
+                    Localization.setEnLocale();
+                    updateLanguage();
+                }
+                ));
         factory.addMenu(localizationMenuModel);
 
         var exitMenuModel = new MenuModel(Localization.getOptionsMenuText(),
@@ -125,7 +136,6 @@ public class MainApplicationFrame extends JFrame implements Closable
         exitMenuModel.addMenuItemModel(new MenuItemModel(Localization.getOptionsMenuQuit(), KeyEvent.VK_Q,
                 e -> exitHandler.onClose(CloseOptions.Exit)));
         factory.addMenu(exitMenuModel);
-
         return factory.createMenuBar();
     }
     
@@ -141,5 +151,14 @@ public class MainApplicationFrame extends JFrame implements Closable
         {
             // just ignore
         }
+    }
+
+    @Override
+    public void updateLanguage(){
+        setJMenuBar(generateMenuBar());
+        logWindow.updateLanguage();
+        Logger.debug(Localization.getDebugMessage());
+        gameWindow.updateLanguage();
+        this.invalidate();
     }
 }

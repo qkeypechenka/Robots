@@ -3,6 +3,7 @@ package main.java.gui;
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
+import main.java.Localization.Localizable;
 import main.java.Localization.Localization;
 import main.java.Serialization.WindowSerializable;
 import main.java.Serialization.WindowState;
@@ -16,7 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
-public class CoordinatesWindow extends JInternalFrame implements Closable, Observer, WindowSerializable
+public class CoordinatesWindow extends JInternalFrame implements Closable, Observer, WindowSerializable, Localizable
 {
     private static double robotCoordinateX;
     private static double robotCoordinateY;
@@ -55,11 +56,13 @@ public class CoordinatesWindow extends JInternalFrame implements Closable, Obser
 
     @Override
     public void update(Observable observable, Object o) {
-        if (updateCounter == 25){
-            updateCoordinatesContent((RobotStructure)observable);
-            updateCounter = 0;
+        if (observable instanceof RobotStructure){
+            if (updateCounter == 25){
+                updateCoordinatesContent((RobotStructure)observable);
+                updateCounter = 0;
+            }
+            updateCounter++;
         }
-        updateCounter++;
     }
 
     private void updateCoordinatesContent(RobotStructure robot){
@@ -74,5 +77,10 @@ public class CoordinatesWindow extends JInternalFrame implements Closable, Obser
         coordinatesContent.setFont(new Font("monospaced", Font.PLAIN, 16));
         coordinatesContent.setText(text.toString());
         coordinatesContent.invalidate();
+    }
+
+    @Override
+    public void updateLanguage() {
+        this.title = Localization.getCoordinatesWindowTitle();
     }
 }

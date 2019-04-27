@@ -12,6 +12,7 @@ import javax.swing.event.InternalFrameEvent;
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
+import main.java.Localization.Localizable;
 import main.java.Localization.Localization;
 import main.java.Serialization.WindowSerializable;
 import main.java.Serialization.WindowState;
@@ -19,7 +20,7 @@ import main.java.log.LogChangeListener;
 import main.java.log.LogEntry;
 import main.java.log.LogWindowSource;
 
-public class LogWindow extends JInternalFrame implements LogChangeListener, Closable, WindowSerializable
+public class LogWindow extends JInternalFrame implements LogChangeListener, Closable, WindowSerializable, Localizable
 {
     private LogWindowSource logSource;
     private TextArea logContent;
@@ -68,5 +69,10 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Clos
     public void onLogChanged()
     {
         EventQueue.invokeLater(this::updateLogContent);
+    }
+
+    @Override
+    public void updateLanguage() {
+        this.title = Localization.getLogWindowTitle();
     }
 }
