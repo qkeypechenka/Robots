@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class LogWindowSource
 {
@@ -15,7 +16,7 @@ public class LogWindowSource
     public LogWindowSource(int queueLength)
     {
         this.queueLength = queueLength;
-        messages = new LinkedList<>();
+        messages = new ConcurrentLinkedQueue<>();
         listeners = new ArrayList<>();
     }
 
@@ -41,7 +42,7 @@ public class LogWindowSource
         if (messages.size() >= queueLength) {
             messages.poll();
         }
-        messages.add(entry);
+        messages.offer(entry);
 
         synchronized (listeners) {
             for (LogChangeListener listener : listeners) {
@@ -61,8 +62,7 @@ public class LogWindowSource
         {
             return Collections.emptyList();
         }
-        int indexTo = Math.min(startFrom + count, messages.size());
-        return ((LinkedList<LogEntry>) messages).subList(startFrom, indexTo);
+        return messages;
     }
 
     public Iterable<LogEntry> all()
