@@ -2,6 +2,7 @@ package main.java.log;
 
 import java.util.ArrayList;
 import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class LogWindowSource
@@ -10,14 +11,12 @@ public class LogWindowSource
 
     private Queue<LogEntry> messages;
     private final ArrayList<LogChangeListener> listeners;
-    private Queue<LogEntry> waitingMessages;
 
     public LogWindowSource(int queueLength)
     {
         this.queueLength = queueLength;
-        messages = new ConcurrentLinkedQueue<>();
+        messages = new ArrayBlockingQueue<>(queueLength);
         listeners = new ArrayList<>();
-        waitingMessages = new ConcurrentLinkedQueue<>();
     }
 
     public void registerListener(LogChangeListener listener)
@@ -31,14 +30,13 @@ public class LogWindowSource
     public void append(LogLevel logLevel, String strMessage)
     {
         LogEntry entry = new LogEntry(logLevel, strMessage);
-        waitingMessages.offer(entry);
-        if (messages.size()+ waitingMessages.size() >= queueLength) {
+        if (messages.size() >= queueLength) {
             messages.poll();
         }
-
-        var waiting = waitingMessages.poll();
-        if (waiting != null) {
-            messages.offer(waiting);
+        var state = messages.offer(entry);
+        while (!state){
+            messages.poll();
+            state = messages.offer(entry);
         }
 
         synchronized (listeners) {
