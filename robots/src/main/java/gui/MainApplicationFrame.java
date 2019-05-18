@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
@@ -129,6 +130,21 @@ public class MainApplicationFrame extends JFrame implements Closable, Localizabl
                 }
                 ));
         factory.addMenu(localizationMenuModel);
+
+        var jarMenuModel = new MenuModel(Localization.getRobotsMenu(),
+                "", KeyEvent.VK_R);
+        jarMenuModel.addMenuItemModel(new MenuItemModel(Localization.getChooseJar(),
+                KeyEvent.VK_J,
+                e -> {
+                    var chooser = new JFileChooser();
+                    var filter = new FileNameExtensionFilter("JAR file", "jar");
+                    chooser.setFileFilter(filter);
+                    var desicion = chooser.showOpenDialog(this);
+                    if (desicion == JFileChooser.APPROVE_OPTION) {
+                        System.out.println("You've chosen file" + chooser.getSelectedFile().getName());
+                    }
+                }));
+        factory.addMenu(jarMenuModel);
 
         var exitMenuModel = new MenuModel(Localization.getOptionsMenuText(),
                 Localization.getOptionsMenuDescription(),

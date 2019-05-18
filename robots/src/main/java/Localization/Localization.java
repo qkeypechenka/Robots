@@ -117,4 +117,12 @@ public class Localization {
     public static String getConfirmNo() {
         return getStringBy("ConfirmNo");
     }
+
+    public static String getRobotsMenu() {
+        return getStringBy("Robots");
+    }
+
+    public static String getChooseJar() {
+        return getStringBy("Choose robot");
+    }
 }

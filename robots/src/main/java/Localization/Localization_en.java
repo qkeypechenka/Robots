@@ -28,7 +28,9 @@ public class Localization_en extends Localization_ru {
                 {"LocalizationEnglish", "English"},
                 {"ConfirmExit", "Are you sure?"},
                 {"ConfirmYes", "Yes"},
-                {"ConfirmNo", "No"}
+                {"ConfirmNo", "No"},
+                {"Robots", "Robots"},
+                {"Choose robot", "Choose robots' jar"}
         };
     }
 }

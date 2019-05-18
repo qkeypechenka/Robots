@@ -30,7 +30,9 @@ public class Localization_ru extends ListResourceBundle {
                 {"LocalizationEnglish", "English"},
                 {"ConfirmExit", "Вы уверены?"},
                 {"ConfirmYes", "Да"},
-                {"ConfirmNo", "Нет"}
+                {"ConfirmNo", "Нет"},
+                {"Robots", "Роботы"},
+                {"Choose robot", "Выберите jar робота"}
         };
     }
 }
