@@ -35,19 +35,25 @@ public class GameWindow extends JInternalFrame implements Closable, WindowSerial
 
     public GameWindow(MainApplicationFrame mainAppFrame,
                       int gameWindowWidth,
-                      int gameWindowHeight)
+                      int gameWindowHeight,
+                      GameVisualizer gameVisualizer,
+                      GameLogic logic,
+                      CoordinatesWindow coordinatesWindow)
     {
         super(Localization.getGameWindowTitle(), true, true, true, true);
-        GameLogic gameLogic = new GameLogic();
-        GameVisualizer visualizer = new GameVisualizer(gameLogic);
+//        GameLogic gameLogic = new GameLogic();
+//        GameVisualizer visualizer = new GameVisualizer(gameLogic);
+        var gameLogic = logic;
+        var visualizer = gameVisualizer;
         GameWindow.gameWindowWidth = gameWindowWidth;
         GameWindow.gameWindowHeight = gameWindowHeight;
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);
 
-        coordinatesWindow = createCoordinatesWindow(gameLogic.getRobots().get(0));
-        mainAppFrame.addWindow(coordinatesWindow);
+        this.coordinatesWindow = coordinatesWindow;
+//        this.coordinatesWindow = createCoordinatesWindow(gameLogic.getRobots().get(0));
+        mainAppFrame.addWindow(this.coordinatesWindow);
 
         pack();
         exitHandler = new ExitHandler(this);

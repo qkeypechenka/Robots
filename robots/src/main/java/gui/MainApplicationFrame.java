@@ -2,6 +2,7 @@ package main.java.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -9,11 +10,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import main.java.Controllers.Closable;
 import main.java.Controllers.CloseOptions;
 import main.java.Controllers.ExitHandler;
+import main.java.Loader.Loader;
 import main.java.Localization.Localizable;
 import main.java.Localization.Localization;
 import main.java.Serialization.WindowSerializer;
 import main.java.gui.MenuBar.*;
 import main.java.log.Logger;
+import main.java.logic.GameLogic;
 
 public class MainApplicationFrame extends JFrame implements Closable, Localizable
 {
@@ -35,8 +38,8 @@ public class MainApplicationFrame extends JFrame implements Closable, Localizabl
         logWindow = createLogWindow();
         addWindow(logWindow);
 
-        gameWindow = createGameWindow(screenSize);
-        addWindow(gameWindow);
+//        gameWindow = createGameWindow(screenSize);
+//        addWindow(gameWindow);
 
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -64,22 +67,26 @@ public class MainApplicationFrame extends JFrame implements Closable, Localizabl
         return stored;
     }
 
-    private GameWindow createGameWindow(Dimension screenSize) {
-        var windowModel = WindowSerializer.deserializeWindow(Constants.gameWindow);
-        GameWindow stored;
-        if (windowModel == null) {
-            stored = new GameWindow(this,
-                    Constants.gameWindowWidth,
-                    Constants.gameWindowHeight);
-            stored.setLocation((screenSize.width / 3), (screenSize.height / 3));
-            stored.setSize(Constants.gameWindowWidth, Constants.gameWindowHeight);
-        } else {
-            stored = new GameWindow(this, windowModel.width, windowModel.height);
-            WindowSerializer.deserializeInto(stored, Constants.gameWindow);
-        }
-        WindowSerializer.addWindow(stored, Constants.gameWindow);
-        return stored;
-    }
+//    private GameWindow createGameWindow(Dimension screenSize) {
+//        var windowModel = WindowSerializer.deserializeWindow(Constants.gameWindow);
+//        GameWindow stored;
+//        if (windowModel == null) {
+//            stored = new GameWindow(this,
+//                    Constants.gameWindowWidth,
+//                    Constants.gameWindowHeight);
+//            stored.setLocation((screenSize.width / 3), (screenSize.height / 3));
+//            stored.setSize(Constants.gameWindowWidth, Constants.gameWindowHeight);
+//        } else {
+//            stored = new GameWindow(this, windowModel.width, windowModel.height);
+//            WindowSerializer.deserializeInto(stored, Constants.gameWindow);
+//        }
+//        WindowSerializer.addWindow(stored, Constants.gameWindow);
+//        return stored;
+//    }
+
+//    private GameWindow createGameWindow(Dimension screenSize) {
+//
+//    }
     
     void addWindow(JInternalFrame frame)
     {
@@ -142,6 +149,25 @@ public class MainApplicationFrame extends JFrame implements Closable, Localizabl
                     var desicion = chooser.showOpenDialog(this);
                     if (desicion == JFileChooser.APPROVE_OPTION) {
                         System.out.println("You've chosen file" + chooser.getSelectedFile().getName());
+                        var file = chooser.getSelectedFile();
+                        try {
+                            var logic = Loader.loadFromJar(file, "logic.GameLogic");
+                            var gameVisualiserClass = Loader.loadFromJar(file, "gui.GameVisualizer");
+                            var gameLogic = (GameLogic) Loader.createInstance(logic);
+                            var gameVisualizer = (GameVisualizer) Loader.createInstance(gameVisualiserClass,
+                                                                                         gameLogic);
+                            var coordinatesWindow = createCoordinatesWindow(file, gameLogic);
+                            gameWindow = new GameWindow(this,
+                                                                Constants.gameWindowWidth,
+                                                                Constants.gameWindowHeight,
+                                                                gameVisualizer,
+                                                                gameLogic,
+                                                                coordinatesWindow);
+                            addWindow(gameWindow);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                        // TODO: добавление gamewindow
                     }
                 }));
         factory.addMenu(jarMenuModel);
@@ -167,6 +193,20 @@ public class MainApplicationFrame extends JFrame implements Closable, Localizabl
         {
             // just ignore
         }
+    }
+
+    private CoordinatesWindow createCoordinatesWindow(File file, GameLogic logic) {
+        try {
+            var coordinatesClass = Loader.loadFromJar(file, "gui.CoordinatesWindow");
+            var robot = logic.getRobots().get(0);
+            var coordinatesWindow = (CoordinatesWindow) Loader.createInstance(coordinatesClass, robot,
+                                                            Constants.robotStartX,
+                                                            Constants.robotStartY);
+            return coordinatesWindow;
+        } catch(Exception e) {
+            System.exit(100500);
+        }
+        return null;
     }
 
     @Override
